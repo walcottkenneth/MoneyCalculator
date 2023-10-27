@@ -1,0 +1,139 @@
+#include <iostream>
+using namespace std;
+
+
+const int maxEarnings = 10;
+void formatMoney(double);
+/*
+class Expenses() {
+    private:
+        double monthlyRate;
+    public:
+        //Constructors
+        Expenses(double mR) : monthlyRate(mR) {}
+        //Deconstructors
+        //Getters
+        double getMonthlyRate() { return monthlyRate; }
+        //Setters
+        void setMonthlyRate(double mR) { 
+            if(mR < 0) { cout << "Incorrect Amount\n"; }
+            else monthlyRate = mR;
+         }
+        //Print
+};
+*/
+
+class Job {
+    private:
+        double wage = 0;
+        string name;
+    public:
+        //Constructors
+        Job() {}
+        Job(double w, string n) : wage(w), name(n) { }
+        //Deconstructors
+        //Getters
+        string getName() { return name; }
+        double getWage() { return wage; }
+        //Setters
+        void setWage(double w) { 
+            if(w < 0) { cout << "Insufficient Amount.\n"; }
+            else wage = w; 
+        }
+        //
+        double dailyRate() { return getWage() * 8; }
+        double weeklyRate() { return dailyRate() * 5; }
+        double annualRate() { return weeklyRate() * 52; }
+        double monthlyRate() { return annualRate() / 12; }
+        double taxes(double w) { return w * .7; }
+
+        void print() {
+            cout << getName() << " \n";
+            formatMoney(getWage());
+            cout << " per. hour \n";
+            formatMoney(dailyRate());
+            cout << " per. day \n";
+            formatMoney(weeklyRate());
+            cout << " per. wk \n";
+            formatMoney(monthlyRate());
+            cout << " per. month \n";
+            formatMoney(annualRate());
+            cout << " per. year \n\n";
+        }
+};
+class Person {
+    private:
+        int numEarnings = 0;
+        int maxExpenses = 100;
+        
+        string name;
+        Job career[maxEarnings];
+        //Expenses *bills = new Expenses[maxExpenses];
+    public:
+    
+        //Constructors
+        Person(string n) : name(n) {}
+        //Deconstructors
+        //Getters
+        int getNumEarnings() { return numEarnings; }
+        string getName() { return name; }
+        void getCareers() { 
+            for(int i = 0; i < numEarnings; i++) { career[i].print(); }
+        }
+        void combinedCareers() {
+            double totalWages = 0;
+            for(int i = 0; i < numEarnings; i++) { totalWages += career[i].getWage(); }
+            Job temp(totalWages, "Combined");
+            temp.print();
+        }
+        //Setters
+        void setName(string n) { name = n; }
+        void setNumEarnings() { numEarnings++; }
+        void addCareer(Job &j) { 
+            career[numEarnings] = j;
+            numEarnings++;
+        }
+        //Print
+        void print() {
+            cout << getName() << " earnings: \n\n";
+            getCareers();
+            combinedCareers();
+        }
+};
+void formatMoney(double original) {
+    int i = original;
+    int tempO = original * 100;
+    int cents = tempO % 100;
+  
+    int millions = i / 1000000;
+    i = i % 1000000;
+    int thousands = i / 1000;
+    i = i % 1000;
+    int singles = i;
+    
+    cout << "$"; 
+    if(millions > 0) cout << millions << ",";
+    //Thousands range 999999 to 1000
+    if(thousands < 100 && millions > 0) cout << "0";
+        if(thousands < 10 && millions > 0) cout << "0";
+        if(thousands >= 1) cout << thousands << ",";
+        else;
+    //Singles range 999 to 1
+    if(singles < 100 && (thousands > 0 || millions > 0)) cout << "0";
+        if(singles < 10 && (thousands > 0 || millions > 0)) cout << "0";
+        cout << singles << ".";
+    //Cents range 0.99 to 0.00
+    if(cents < 10) cout << "0";
+        else if(cents == 0) cout << "00";
+        cout << cents;
+}
+
+int main() {
+    Job lockheedMartin(50.62, "Lockheed Martin");
+    Job bristolHome(4.39, "Bristol Home");
+    Person kenny("Kenny");
+    kenny.addCareer(lockheedMartin);
+    kenny.addCareer(bristolHome);
+    kenny.print();
+    return 0;
+}
